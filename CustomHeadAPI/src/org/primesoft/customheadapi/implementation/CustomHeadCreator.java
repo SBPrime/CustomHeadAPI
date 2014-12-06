@@ -49,7 +49,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.primesoft.customheadapi.CustomHeadApi;
 import org.primesoft.customheadapi.IHeadCreator;
 import org.primesoft.customheadapi.utils.Reflection;

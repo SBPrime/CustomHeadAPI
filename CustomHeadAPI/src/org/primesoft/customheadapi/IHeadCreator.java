@@ -42,7 +42,6 @@
 package org.primesoft.customheadapi;
 
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  *
