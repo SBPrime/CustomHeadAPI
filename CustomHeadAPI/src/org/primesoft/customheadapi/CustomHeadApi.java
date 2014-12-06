@@ -72,7 +72,7 @@ public class CustomHeadApi extends JavaPlugin {
      *
      * @return
      */
-    public CustomHeadApi getInstance() {
+    public static CustomHeadApi getInstance() {
         return s_instance;
     }
 
