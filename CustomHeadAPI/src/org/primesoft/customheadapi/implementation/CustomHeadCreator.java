@@ -47,6 +47,8 @@ import com.mojang.authlib.properties.PropertyMap;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Material;
+import org.bukkit.SkullType;
+import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.primesoft.customheadapi.CustomHeadApi;
@@ -58,22 +60,34 @@ import org.primesoft.customheadapi.utils.Reflection;
  * @author SBPrime
  */
 public class CustomHeadCreator implements IHeadCreator {
-    private Base64 m_base64 = new Base64();
+    private final Base64 m_base64 = new Base64();
+    
     
     @Override
-    public ItemStack createItemStack(String url) {
+    public GameProfile createGameProfile(String url)
+    {
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         PropertyMap propertyMap = profile.getProperties();
         if (propertyMap == null) 
         {
             CustomHeadApi.log("No property map found in GameProfile, can't continue.");
             return null;
-        }                
-                
+        } 
+
         byte[] encodedData = m_base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+        propertyMap.put("textures", new Property("textures", new String(encodedData)));        
         
-        propertyMap.put("textures", new Property("textures", new String(encodedData)));
-                
+        return profile;
+    }
+    
+    @Override
+    public ItemStack createItemStack(String url) {
+        GameProfile profile = createGameProfile(url);
+        
+        if (profile == null) {
+            return null;                    
+        }
+        
         ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         ItemMeta headMeta = head.getItemMeta();
         Class<?> headMetaClass = headMeta.getClass();
@@ -86,4 +100,29 @@ public class CustomHeadCreator implements IHeadCreator {
         head.setItemMeta(headMeta);
         return head;
     }    
+
+    @Override
+    public boolean updateSkull(Skull skull, String url) {
+        if (skull == null) {
+            return false;
+        }
+        
+        GameProfile profile = createGameProfile(url);
+        
+        if (profile == null) {
+            return false;
+        }
+        
+        skull.setSkullType(SkullType.PLAYER);
+        
+        Class<?> skullClass = skull.getClass();
+        if (!Reflection.set(skullClass, skull, "profile",
+                profile,
+                "Unable to inject porofile")) {
+            return false;
+        }
+        
+        skull.update();
+        return true;
+    }
 }

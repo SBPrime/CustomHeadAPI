@@ -1,6 +1,6 @@
 name: CustomHeadApi
 main: org.primesoft.customheadapi.CustomHeadApi
-version: 0.1
+version: 0.2
 website: https://github.com/SBPrime/CustomHeadAPI/wiki
 dev-url: https://github.com/SBPrime/CustomHeadAPI/wiki
 description: This plugin provides a simple API that allows the creation of player heads using custom textures.

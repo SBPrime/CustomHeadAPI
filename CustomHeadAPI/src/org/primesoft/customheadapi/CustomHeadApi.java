@@ -41,6 +41,7 @@
  */
 package org.primesoft.customheadapi;
 
+import com.mojang.authlib.GameProfile;
 import org.primesoft.customheadapi.implementation.FallbackHeadCreator;
 import org.primesoft.customheadapi.implementation.CustomHeadCreator;
 import java.util.logging.Level;

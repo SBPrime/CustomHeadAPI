@@ -41,7 +41,9 @@
  */
 package org.primesoft.customheadapi.implementation;
 
+import com.mojang.authlib.GameProfile;
 import org.bukkit.Material;
+import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 import org.primesoft.customheadapi.IHeadCreator;
 
@@ -54,5 +56,15 @@ public class FallbackHeadCreator implements IHeadCreator {
     @Override
     public ItemStack createItemStack(String url) {
         return new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+    }
+
+    @Override
+    public GameProfile createGameProfile(String url) {
+        return null;
+    }
+
+    @Override
+    public boolean updateSkull(Skull skull, String url) {
+        return false;
     }
 }

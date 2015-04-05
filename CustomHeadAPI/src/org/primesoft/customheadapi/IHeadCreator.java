@@ -41,6 +41,8 @@
  */
 package org.primesoft.customheadapi;
 
+import com.mojang.authlib.GameProfile;
+import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -49,10 +51,28 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface IHeadCreator {
     /**
+     * Create a new GameProfile containing custom
+     * player head data
+     * @param url The texture url (image 32x16pixel)
+     * @return 
+     */
+    GameProfile createGameProfile(String url);
+    
+    /**
      * Create a new item stack that contains a custom 
      * player head
      * @param url The texture url (image 32x16pixel)
      * @return 
      */
     ItemStack createItemStack(String url);
+    
+    
+    /**
+     * Set the custom player head data directly into
+     * the skull tiled entity
+     * @param skull The skull block state (use Block.getState() on skull block)
+     * @param url The texture url (image 32x16pixel)
+     * @return true if update was successful 
+     */
+    boolean updateSkull(Skull skull, String url);
 }
