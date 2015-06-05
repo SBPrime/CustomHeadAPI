@@ -106,7 +106,7 @@ public class CustomHeadApi extends JavaPlugin {
 
         try {
             m_headCreator = new CustomHeadCreator();
-            ItemStack headItem = m_headCreator.createItemStack("foo.org");
+            ItemStack headItem = m_headCreator.createItemStack("http://bar.foo.org/skin.png");
             if (headItem == null) {
                 log("Something went wrong, using the fallback head creator. No custom heads available :(");
                 log("Send the above message to the author of the plugin.");

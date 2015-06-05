@@ -44,7 +44,12 @@ package org.primesoft.customheadapi.implementation;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -62,6 +67,31 @@ import org.primesoft.customheadapi.utils.Reflection;
 public class CustomHeadCreator implements IHeadCreator {
     private final Base64 m_base64 = new Base64();
     
+    public void injectWhitelistUrl(String url) {
+
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL '" + url + "'");
+        }
+        String[] whitelistedDomains = Reflection.get(YggdrasilMinecraftSessionService.class, String[].class,
+                "WHITELISTED_DOMAINS", "failed to get whitelisted domains");
+        String domain = uri.getHost();
+        boolean foundDomain = false;
+        for (String whitelistedDomain : whitelistedDomains) {
+            if (domain.endsWith(whitelistedDomain)) {
+                foundDomain = true;
+                break;
+            }
+        }
+        if (!foundDomain) {
+            List<String> domains = new ArrayList<>(Arrays.asList(whitelistedDomains));
+            domains.add(uri.getHost());
+            Reflection.set(YggdrasilMinecraftSessionService.class,
+                    "WHITELISTED_DOMAINS", domains.toArray(new String[domains.size()]), "failed to inject whitelist domain");
+        }
+    }
     
     @Override
     public GameProfile createGameProfile(String url)
@@ -72,7 +102,9 @@ public class CustomHeadCreator implements IHeadCreator {
         {
             CustomHeadApi.log("No property map found in GameProfile, can't continue.");
             return null;
-        } 
+        }
+        
+        injectWhitelistUrl(url);
 
         byte[] encodedData = m_base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
         propertyMap.put("textures", new Property("textures", new String(encodedData)));        
