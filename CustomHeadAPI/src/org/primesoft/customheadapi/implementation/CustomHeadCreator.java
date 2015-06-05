@@ -86,7 +86,7 @@ public class CustomHeadCreator implements IHeadCreator {
             }
         }
         if (!foundDomain) {
-            List<String> domains = Arrays.asList(whitelistedDomains);
+            List<String> domains = new ArrayList<>(Arrays.asList(whitelistedDomains));
             domains.add(uri.getHost());
             Reflection.set(YggdrasilMinecraftSessionService.class,
                     "WHITELISTED_DOMAINS", domains.toArray(new String[domains.size()]), "failed to inject whitelist domain");
